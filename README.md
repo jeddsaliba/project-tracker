@@ -1,66 +1,104 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## What is Project Tracker?
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Project Tracker** is a web-based dashboard designed to help users efficiently track the status of their projects. With features like push notification alerts for overdue tasks, detailed reporting tools, and exportable reports, Project Tracker simplifies project management and keeps you on top of deadlines.
 
-## About Laravel
+**Key Features:**
+- **Project Status Tracking:** Easily monitor the progress of all your projects in one centralized dashboard.
+- **Push Notification Alerts:** Get instant notifications for tasks that have missed their deadlines.
+- **Report Generation:** Create detailed reports on project progress and task statuses with a few clicks.
+- **Export Reports:** Export project reports in various formats (e.g., EXCEL, CSV) for sharing and record-keeping.
+- **User-Friendly Interface:** A clean and intuitive design ensures seamless navigation and usability.
+- **Secure User Management:** Manage user accounts with role-based permissions for safe and controlled access.
+- **Deadline Reminders:** Stay on schedule with automated alerts and reminders for upcoming deadlines.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Why Choose Project Tracker?**
+- **Stay Organized and On Track:** With its intuitive dashboard and real-time updates, Project Tracker helps you stay organized and ensures no task or deadline is overlooked.
+- **Never Miss a Deadline:** Push notification alerts keep you informed about overdue tasks and deadlines, so you can take timely action.
+- **Comprehensive Reporting:** Generate detailed reports to analyze your project progress, identify bottlenecks, and make data-driven decisions.
+- **Effortless Report Sharing:** Export reports in user-friendly formats like PDF or CSV for easy sharing with team members or stakeholders.
+- **User-Centric Design:** The clean, responsive interface ensures an excellent user experience on both desktop and mobile devices.
+- **Customizable and Scalable:** Designed to adapt to projects of any size, whether you're an individual, a small team, or an entire organization.
+- **Boost Productivity:** Stay focused on your goals with streamlined project tracking, task prioritization, and automated reminders.
+- **Secure and Reliable:** Role-based access control ensures that your project data is secure and only accessible by authorized users.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Table of Contents
+[Installation](#installation)<br/>
+[Setup Local Environment](#environment)<br/>
+[Database](#database)<br/>
+[Create Administrator Account](#create-admin-account)<br/>
+[Install Filament Shield](#install-filament-shield)<br/>
+[Support](#support)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<a name="installation"></a>
+## Installation
+Install the `dependencies` by running:
 
-## Learning Laravel
+```bash
+composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+<a name="environment"></a>
+## Setup Local Environment
+Generate a new `.env` file by running:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+cp .env.example .env
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Configure your `.env` file:
 
-## Laravel Sponsors
+```bash
+APP_URL=https://project-tracker.dev
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+```
 
-### Premium Partners
+<a name="database"></a>
+## Database
+Assuming that you have already created an empty database, run this command to migrate the database tables:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+php artisan migrate:fresh --seed
+```
 
-## Contributing
+<a name="create-admin-account"></a>
+## Create Administrator Account
+In order to create an administrator account, run this command:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan make:filament-user
+```
 
-## Code of Conduct
+<a name="install-filament-shield"></a>
+## Install Filament Shield
+In order to install [filament shield](https://filamentphp.com/plugins/bezhansalleh-shield), run this command:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan shield:setup --fresh
+```
 
-## Security Vulnerabilities
+Next, register the plugin for your panel:
+```bash
+php artisan shield:install app
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Then, generate permissions/policies:
+```bash
+php artisan shield:generate --all
+```
 
-## License
+Finally, choose the super admin from the list of users:
+```bash
+php artisan shield:super-admin
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<a name="support"></a>
+## Support
+This project was generated with [Laravel](https://laravel.com/) and [Filament](https://filamentphp.com).
+
+For support, email jeddsaliba@gmail.com.
