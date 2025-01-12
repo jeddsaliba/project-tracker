@@ -6,7 +6,6 @@ use App\Filament\Widgets\Traits\HasWidgetFilters;
 use App\Models\Project;
 use App\Support\CustomTrend;
 use Carbon\Carbon;
-use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;

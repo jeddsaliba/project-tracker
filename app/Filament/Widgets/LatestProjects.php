@@ -3,8 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Resources\ProjectResource;
-use App\Filament\Resources\TaskResource;
-use Filament\Forms;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;

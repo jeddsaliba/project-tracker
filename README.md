@@ -63,7 +63,7 @@ DB_PASSWORD=
 Assuming that you have already created an empty database, run this command to migrate the database tables:
 
 ```bash
-php artisan migrate:fresh --seed
+php artisan migrate:fresh
 ```
 
 <a name="create-admin-account"></a>
@@ -84,7 +84,7 @@ php artisan shield:setup --fresh
 
 Next, register the plugin for your panel:
 ```bash
-php artisan shield:install app
+php artisan shield:install admin
 ```
 
 Then, generate permissions/policies:

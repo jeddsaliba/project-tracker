@@ -3,20 +3,17 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\CacheKeys;
-use App\Enums\PaymentStatus;
 use App\Filament\Widgets\Traits\HasWidgetFilters;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Support\CustomTrend;
-use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
-class StatsOverview extends BaseWidget
+class StatsOverview extends StatsOverviewWidget
 {
     use HasWidgetFilters;
     use InteractsWithPageFilters;
