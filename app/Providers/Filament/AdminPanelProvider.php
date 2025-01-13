@@ -60,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+                \CharrafiMed\GlobalSearchModal\GlobalSearchModalPlugin::make(),
                 \Rmsramos\Activitylog\ActivitylogPlugin::make()
                     ->navigationCountBadge(true),
             ])
@@ -72,7 +73,6 @@ class AdminPanelProvider extends PanelProvider
                     ->icon(NavGroup::ST->getIcon()),
             ])
             ->databaseNotifications()
-            ->globalSearch()
             ->maxContentWidth(MaxWidth::Full)
             ->sidebarCollapsibleOnDesktop()
             ->spa();

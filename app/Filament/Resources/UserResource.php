@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -33,68 +34,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('tabs')
-                    ->tabs([
-                        Forms\Components\Tabs\Tab::make('Basic Information')
-                            ->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->label('Name')
-                                    ->required(),
-                                Forms\Components\TextInput::make('email')
-                                    ->unique(ignoreRecord: true)
-                                    ->required(),
-                                \Ysfkaya\FilamentPhoneInput\Forms\PhoneInput::make('profile.phone')
-                                    ->formatStateUsing(function (Model | null $record) {
-                                        return $record?->profile?->phone;
-                                    })
-                                    ->required(),
-                                Forms\Components\DatePicker::make('profile.birthdate')
-                                    ->formatStateUsing(function (Model | null $record) {
-                                        return $record?->profile ? Carbon::parse($record->profile->birthdate)->format('Y-m-d') : null;
-                                    })
-                                    ->required(),
-                                Forms\Components\Toggle::make('is_active')
-                                    ->label('Active'),
-                            ])->columns(2),
-                        Forms\Components\Tabs\Tab::make('Change Password')
-                            ->hidden(fn () => !Auth::user()->isSuperAdmin())
-                            ->label(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord ? 'Set Password' : 'Change Password')
-                            ->schema([
-                                Forms\Components\TextInput::make('password')
-                                    ->password()
-                                    ->confirmed()
-                                    ->revealable()
-                                    ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
-                                Forms\Components\TextInput::make('password_confirmation')
-                                    ->password()
-                                    ->revealable()
-                                    ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Reset Password')
-                            ->hidden(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)
-                            ->schema([
-                                Forms\Components\Section::make()
-                                    ->description('This will generate a random password and send it to the user\'s email address. Upon initial login, the user will be prompted to change the password.')
-                                    ->schema([
-                                        Forms\Components\Actions::make([
-                                            Forms\Components\Actions\Action::make('resetPassword')
-                                                ->label('Send password reset')
-                                                ->requiresConfirmation()
-                                                ->action(function (\Livewire\Component $livewire) {
-                                                    $user = $livewire->getRecord();
-                                                    $password = Str::random(8);
-                                                    $user->save();
-                                                    $user->notify(new ResetPasswordNotification($password));
-                                                    Notification::make()
-                                                        ->title('Your password was reset. Please check your email.')
-                                                        ->success()
-                                                        ->send();
-                                                }),
-                                        ]),
-                                    ]),
-                            ]),
-                    ])
-                    ->columnSpanFull(),
+                self::userTabsForm(),
+                self::userForm(),
             ]);
     }
 
@@ -143,6 +84,7 @@ class UserResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -158,7 +100,8 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ProjectsRelationManager::make(),
+            RelationManagers\TasksRelationManager::make(),
         ];
     }
 
@@ -167,6 +110,7 @@ class UserResource extends Resource
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
+            'view' => Pages\ViewUser::route('/{record}'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
@@ -177,5 +121,85 @@ class UserResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function userTabsForm(): Forms\Components\Tabs
+    {
+        return Forms\Components\Tabs::make('tabs')
+            ->tabs([
+                Forms\Components\Tabs\Tab::make('Basic Information')
+                    ->schema(self::userBasicInformationForm())->columns(2),
+                Forms\Components\Tabs\Tab::make('Change Password')
+                    ->hidden(fn () => !Auth::user()->isSuperAdmin())
+                    ->label(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord ? 'Set Password' : 'Change Password')
+                    ->schema([
+                        Forms\Components\TextInput::make('password')
+                            ->password()
+                            ->confirmed()
+                            ->revealable()
+                            ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
+                        Forms\Components\TextInput::make('password_confirmation')
+                            ->password()
+                            ->revealable()
+                            ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
+                    ]),
+                Forms\Components\Tabs\Tab::make('Reset Password')
+                    ->hidden(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)
+                    ->schema([
+                        Forms\Components\Section::make()
+                            ->description('This will generate a random password and send it to the user\'s email address. Upon initial login, the user will be prompted to change the password.')
+                            ->schema([
+                                Forms\Components\Actions::make([
+                                    Forms\Components\Actions\Action::make('resetPassword')
+                                        ->label('Send password reset')
+                                        ->requiresConfirmation()
+                                        ->action(function (\Livewire\Component $livewire) {
+                                            $user = $livewire->getRecord();
+                                            $password = Str::random(8);
+                                            $user->save();
+                                            $user->notify(new ResetPasswordNotification($password));
+                                            Notification::make()
+                                                ->title('Your password was reset. Please check your email.')
+                                                ->success()
+                                                ->send();
+                                        }),
+                                ]),
+                            ]),
+                    ]),
+            ])
+            ->columnSpanFull()
+            ->hiddenOn('view');
+    }
+
+    public static function userForm(): Forms\Components\Section
+    {
+        return Forms\Components\Section::make('Basic Information')
+            ->schema(self::userBasicInformationForm())
+            ->columns(2)
+            ->hiddenOn(['create', 'edit']);
+    }
+
+    public static function userBasicInformationForm(): array
+    {
+        return [
+            Forms\Components\TextInput::make('name')
+                ->label('Name')
+                ->required(),
+            Forms\Components\TextInput::make('email')
+                ->unique(ignoreRecord: true)
+                ->required(),
+            \Ysfkaya\FilamentPhoneInput\Forms\PhoneInput::make('profile.phone')
+                ->formatStateUsing(function (Model | null $record) {
+                    return $record?->profile?->phone;
+                })
+                ->required(),
+            Forms\Components\DatePicker::make('profile.birthdate')
+                ->formatStateUsing(function (Model | null $record) {
+                    return $record?->profile ? Carbon::parse($record->profile->birthdate)->format('Y-m-d') : null;
+                })
+                ->required(),
+            Forms\Components\Toggle::make('is_active')
+                ->label('Active'),
+        ];
     }
 }

@@ -8,7 +8,7 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.3",
-        "charrafimed/global-search-modal": "^3.4",
+        "charrafimed/global-search-modal": "^3.5",
         "filament/filament": "^3.2",
         "filament/notifications": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",

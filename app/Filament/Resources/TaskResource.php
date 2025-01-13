@@ -32,7 +32,7 @@ class TaskResource extends Resource
 
     protected static ?string $navigationGroup = NavGroup::PM->value;
 
-    protected static ?int $navigationSort = 0;
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -56,7 +56,8 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->hidden(fn ($livewire) => $livewire instanceof \App\Filament\Resources\UserResource\RelationManagers\TasksRelationManager),
                 Tables\Columns\TextColumn::make('project.title')
                     ->hidden(fn ($livewire) => $livewire instanceof \App\Filament\Resources\ProjectResource\RelationManagers\TasksRelationManager)
                     ->searchable()
@@ -67,6 +68,7 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('status.name')
                     ->label('Status')
                     ->badge()
+                    ->color(fn (Model $record) => Color::hex(collect($record->status)->first()->color))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('checklistCount')
@@ -251,21 +253,7 @@ class TaskResource extends Resource
                 ->preload()
                 ->createOptionForm([
                     Forms\Components\Grid::make(2)
-                        ->schema([
-                            Forms\Components\TextInput::make('name')
-                                ->required()
-                                ->maxLength(255)
-                                ->live(onBlur: true)
-                                ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                    $set('slug', Str::slug($state));
-                                }),
-                            Forms\Components\TextInput::make('slug')
-                                ->dehydrated()
-                                ->required()
-                                ->maxLength(255)
-                                ->unique(ignoreRecord: true),
-                            Forms\Components\ColorPicker::make('color')
-                        ]),
+                        ->schema(StatusResource::getStatusForm()),
                 ])
                 ->columnSpan(2),
             Forms\Components\RichEditor::make('description')
@@ -300,8 +288,8 @@ class TaskResource extends Resource
             ->bulkToggleable()
             ->searchable()
             ->default(fn (Model $record) => $record->checklist()->where(['is_done' => true])->pluck('id')->toArray())
-            ->afterStateHydrated(function (Model $record, Forms\Components\CheckboxList $checklist) {
-                $count = $record->checklist()->count();
+            ->afterStateHydrated(function (Model | null $record, Forms\Components\CheckboxList $checklist) {
+                $count = $record?->checklist()->count();
                 $checklist->columns(max(1, (int) ceil($count / 10)));
             })
             ->hiddenLabel();

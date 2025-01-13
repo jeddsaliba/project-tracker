@@ -93,7 +93,7 @@ class Project extends Model implements HasMedia
 
     public function status(): BelongsToMany
     {
-        return $this->belongsToMany(Status::class);
+        return $this->belongsToMany(Status::class)->withTrashed();
     }
 
     public function tasks(): HasMany

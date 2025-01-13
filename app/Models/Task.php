@@ -30,6 +30,7 @@ class Task extends Model implements HasMedia
      * @var array<int, string>
      */
     protected $fillable = [
+        'project_id',
         'title',
         'slug',
         'description',
@@ -90,7 +91,7 @@ class Task extends Model implements HasMedia
 
     public function status(): BelongsToMany
     {
-        return $this->belongsToMany(Status::class);
+        return $this->belongsToMany(Status::class)->withTrashed();
     }
 
     public function project(): BelongsTo

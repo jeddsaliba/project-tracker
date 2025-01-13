@@ -47,13 +47,15 @@ class ProjectResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->hidden(fn ($livewire) => $livewire instanceof \App\Filament\Resources\UserResource\RelationManagers\ProjectsRelationManager),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status.name')
                     ->label('Status')
                     ->badge()
+                    ->color(fn (Model $record) => Color::hex(collect($record->status)->first()->color))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('createdBy.name')
@@ -154,21 +156,7 @@ class ProjectResource extends Resource
                         ->preload()
                         ->createOptionForm([
                             Forms\Components\Grid::make(2)
-                                ->schema([
-                                    Forms\Components\TextInput::make('name')
-                                        ->required()
-                                        ->maxLength(255)
-                                        ->live(onBlur: true)
-                                        ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                            $set('slug', Str::slug($state));
-                                        }),
-                                    Forms\Components\TextInput::make('slug')
-                                        ->dehydrated()
-                                        ->required()
-                                        ->maxLength(255)
-                                        ->unique(ignoreRecord: true),
-                                    Forms\Components\ColorPicker::make('color')
-                                ]),
+                                ->schema(StatusResource::getStatusForm()),
                         ]),
                     Forms\Components\RichEditor::make('description')
                         ->required()
