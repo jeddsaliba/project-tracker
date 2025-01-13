@@ -30,6 +30,7 @@
 [Install Filament Shield](#install-filament-shield)<br/>
 [Initial Log In](#initial-log-in)<br/>
 [Generate Test Data](#generate-test-data)<br/>
+[Gallery](#gallery)<br/>
 [Support](#support)
 
 <a name="installation"></a>
@@ -111,6 +112,13 @@ You may also run this command in order to populate the database with test data:
 ```bash
 php artisan db:seed
 ```
+
+<a name="gallery"></a>
+## Gallery
+
+![Projects](public/screens/screely-1736755790674.png)
+![Tasks](public/screens/screely-1736756427413.png)
+![Checklist](public/screens/screely-1736755228356.png)
 
 <a name="support"></a>
 ## Support
