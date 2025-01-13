@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,12 +24,16 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $date = Carbon::now();
+        $createdDate = fake()->dateTimeBetween($date->copy()->startOfWeek(), $date->copy()->endOfWeek());
         return [
-            'name' => fake()->name(),
+            'name' => fake()->unique()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'created_at' => $createdDate,
+            'updated_at' => $createdDate
         ];
     }
 

@@ -9,6 +9,6 @@ class ChecklistObserver
 {
     public function creating(Checklist $checklist): void
     {
-        $checklist->created_by = Auth::id();
+        if (!$checklist->created_by) $checklist->created_by = Auth::id();
     }
 }

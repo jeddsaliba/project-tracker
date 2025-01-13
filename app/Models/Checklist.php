@@ -24,9 +24,11 @@ class Checklist extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'task_id',
         'title',
         'description',
-        'is_done'
+        'is_done',
+        'created_by'
     ];
 
     /**

@@ -6,6 +6,7 @@ use App\Enums\NavGroup;
 use App\Filament\Exports\TaskExporter;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\Pages\ViewTask;
+use App\Filament\Widgets\Traits\HasWidgetFilters;
 use App\Models\Task;
 use Carbon\Carbon;
 use Filament\Actions\Action;
@@ -303,5 +304,17 @@ class TaskResource extends Resource
                 $checklist->columns(max(1, (int) ceil($count / 10)));
             })
             ->hiddenLabel();
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::whereNull('actual_completed_date')->where('expected_completed_date', '>', Carbon::now())->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        $totalPending = static::getModel()::whereNull('actual_completed_date')->where('expected_completed_date', '>', Carbon::now())->count();
+        $total = static::getModel()::count();
+        return $totalPending / $total > 0.5 ? 'warning' : 'success';
     }
 }

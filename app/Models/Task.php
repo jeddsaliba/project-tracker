@@ -34,6 +34,7 @@ class Task extends Model implements HasMedia
         'title',
         'slug',
         'description',
+        'created_by',
         'expected_completed_date',
         'actual_completed_date'
     ];

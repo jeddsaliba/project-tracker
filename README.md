@@ -27,6 +27,8 @@
 [Database](#database)<br/>
 [Create Administrator Account](#create-admin-account)<br/>
 [Install Filament Shield](#install-filament-shield)<br/>
+[Initial Log In](#initial-log-in)<br/>
+[Generate Test Data](#generate-test-data)<br/>
 [Support](#support)
 
 <a name="installation"></a>
@@ -95,6 +97,17 @@ php artisan shield:generate --all
 Finally, choose the super admin from the list of users:
 ```bash
 php artisan shield:super-admin
+```
+<a name="initial-log-in"></a>
+## Initial Log In
+Open your web browser and go to your project url. In this example, the project url is `https://project-tracker.dev`.
+
+<a name="generate-test-data"></a>
+## Generate Test Data
+You may also run this command in order to populate the database with test data:
+
+```bash
+php artisan db:seed
 ```
 
 <a name="support"></a>

@@ -191,4 +191,16 @@ class ProjectResource extends Resource
                 ->columns(5)
             ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::whereNull('actual_completed_date')->where('expected_completed_date', '>', Carbon::now())->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        $totalPending = static::getModel()::whereNull('actual_completed_date')->where('expected_completed_date', '>', Carbon::now())->count();
+        $total = static::getModel()::count();
+        return $totalPending / $total > 0.5 ? 'warning' : 'success';
+    }
 }
