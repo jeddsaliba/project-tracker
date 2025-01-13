@@ -22,6 +22,7 @@ class ProjectSeeder extends Seeder
             } else {
                 $project->status()->attach(fake()->numberBetween(1, 2));
             }
+            $project->users()->attach(fake()->numberBetween(1, 15));
         });
     }
 }

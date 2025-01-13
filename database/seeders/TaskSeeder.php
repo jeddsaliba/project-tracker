@@ -22,6 +22,7 @@ class TaskSeeder extends Seeder
             } else {
                 $task->status()->attach(fake()->numberBetween(1, 2));
             }
+            $task->users()->attach(fake()->numberBetween(1, 15));
         });
     }
 }

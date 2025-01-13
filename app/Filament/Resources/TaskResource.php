@@ -124,6 +124,7 @@ class TaskResource extends Resource
                         self::getChecklist()
                     ])
                     ->requiresConfirmation()
+                    ->modalDescription(fn (Model $record) => "{$record->title}'s checklist")
                     ->after(function (Model $record): void {
                         if ($record->checklist()->where(['is_done' => false])->get()->isEmpty()) {
                             $record->whereNull('actual_completed_date')->update(['actual_completed_date' => Carbon::now()]);
@@ -288,7 +289,7 @@ class TaskResource extends Resource
     {
         return Forms\Components\CheckboxList::make('checklist')
             ->options(fn (Model $record) => $record->checklist()->pluck('title', 'id')->toArray())
-            ->descriptions(fn (Model $record) => $record->checklist()->pluck('description', 'id')->map(fn ($description) =>new HtmlString($description))->toArray())
+            ->descriptions(fn (Model $record) => $record->checklist()->pluck('description', 'id')->map(fn ($description) => new HtmlString(Str::limit($description, 50)))->toArray())
             ->bulkToggleable()
             ->searchable()
             ->default(fn (Model $record) => $record->checklist()->where(['is_done' => true])->pluck('id')->toArray())
@@ -308,6 +309,7 @@ class TaskResource extends Resource
     {
         $totalPending = static::getModel()::whereNull('actual_completed_date')->where('expected_completed_date', '>', Carbon::now())->count();
         $total = static::getModel()::count();
+        if (!$total) return 'primary';
         return $totalPending / $total > 0.5 ? 'warning' : 'success';
     }
 }

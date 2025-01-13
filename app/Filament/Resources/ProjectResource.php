@@ -200,6 +200,7 @@ class ProjectResource extends Resource
     {
         $totalPending = static::getModel()::whereNull('actual_completed_date')->where('expected_completed_date', '>', Carbon::now())->count();
         $total = static::getModel()::count();
+        if (!$total) return 'primary';
         return $totalPending / $total > 0.5 ? 'warning' : 'success';
     }
 }
