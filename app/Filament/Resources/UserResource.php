@@ -56,6 +56,12 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->badge()
+                    ->formatStateUsing(fn ($state): string => Str::headline($state))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('profile.phone')
                     ->label('Phone')
                     ->searchable()
@@ -198,8 +204,15 @@ class UserResource extends Resource
                     return $record?->profile ? Carbon::parse($record->profile->birthdate)->format('Y-m-d') : null;
                 })
                 ->required(),
+            Forms\Components\Select::make('roles')
+                ->relationship('roles', 'name')
+                ->multiple()
+                ->preload()
+                ->searchable(),
             Forms\Components\Toggle::make('is_active')
-                ->label('Active'),
+                ->label(fn ($state) => $state ? 'Active' : 'Inactive')
+                ->inline(false)
+                ->live(),
         ];
     }
 }

@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ProjectResource extends Resource
@@ -125,6 +126,15 @@ class ProjectResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->when(!Auth::user()->isSuperAdmin(), function ($query) {
+                $query->whereHas('users', function ($query) {
+                    $query->where('users.id', Auth::id()); // Filter by the current user's ID
+                })->orWhere(function ($query) {
+                    $query->whereHas('createdBy', function ($query) {
+                        $query->where('users.id', Auth::id()); // Filter by the current user's ID
+                    });
+                });
+            })
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
