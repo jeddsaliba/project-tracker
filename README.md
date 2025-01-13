@@ -1,4 +1,5 @@
 ## What is Project Tracker?
+![Welcome](public/screens/screely-1736754641996.png)
 
 **Project Tracker** is a web-based dashboard designed to help users efficiently track the status of their projects. With features like push notification alerts for overdue tasks, detailed reporting tools, and exportable reports, Project Tracker simplifies project management and keeps you on top of deadlines.
 
@@ -101,6 +102,7 @@ php artisan shield:super-admin
 <a name="initial-log-in"></a>
 ## Initial Log In
 Open your web browser and go to your project url. In this example, the project url is `https://project-tracker.dev`.
+![LogIn](public/screens/screely-1736756150281.png)
 
 <a name="generate-test-data"></a>
 ## Generate Test Data
